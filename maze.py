@@ -20,13 +20,24 @@ class Player(GameObject):
         key_pressed = key.get_pressed()
         if key_pressed[K_a] and self.rect.x > 1:
             self.rect.x -= self.speed
+            if self.collide():
+                self.rect.x += self.speed
         if key_pressed[K_d] and self.rect.x < 740:
             self.rect.x += self.speed
+            if self.collide():
+                self.rect.x -= self.speed
         if key_pressed[K_w] and self.rect.y > 1:
             self.rect.y -= self.speed
+            if self.collide():
+                self.rect.y += self.speed
         if key_pressed[K_s] and self.rect.y < 740:
             self.rect.y += self.speed
-
+            if self.collide():
+                self.rect.y -= self.speed
+    def collide(self):
+        for box in box_list:
+            if self.rect.colliderect(box.rect):
+                return True
 box_list = []
 empty_list = []
 prize_list = []
@@ -45,7 +56,7 @@ for i in range(0,11):
     prize_list.append(prize)
     
 x,y = choice(empty_list)
-player = Player(x, y, box_size, (0, 0, 255), 3)
+player = Player(x, y, box_size, (0, 0, 255), 10)
 
 run = True
 while run:
@@ -58,8 +69,9 @@ while run:
         window.blit(box.image, box.rect)
     for prize in prize_list:
         window.blit(prize.image, prize.rect)
-    player.control()
+    player.control()    
     window.blit(player.image, player.rect)
     
     clock.tick(25)    
     display.update()
+
